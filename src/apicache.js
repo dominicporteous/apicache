@@ -309,12 +309,15 @@ function ApiCache() {
         key = url.parse(key).pathname
       }
 
-      if (globalOptions.appendKey.length > 0) {
-        var appendKey = req
-
-        for (var i = 0; i < globalOptions.appendKey.length; i++) {
-          appendKey = appendKey[globalOptions.appendKey[i]]
+      if (globalOptions.appendKey) {
+        
+        var appendKey = globalOptions.appendKey;
+        if( typeof globalOptions.appendKey == "function" ){
+          appendKey = globalOptions.appendKey(req,res);
+        }else if( Array.isArray( globalOptions.appendKey ) ){
+          appendKey = globalOptions.appendKey.join(',');
         }
+          
         key += '$$appendKey=' + appendKey
       }
 
